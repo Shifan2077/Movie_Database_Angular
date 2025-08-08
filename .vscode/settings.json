@@ -1,0 +1,19 @@
+{
+  "tailwindCSS.includeLanguages": {
+    "html": "html",
+    "typescript": "html",
+    "javascript": "html"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["class\\s*=\\s*['\"`]([^'\"`]*).*?['\"`]", "([^'\"`]*)"],
+    ["class\\s*=\\s*['\"`]([^'\"`]*).*?['\"`]", "([^'\"`]*)"]
+  ],
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**"
+  ],
+  "tailwindCSS.requireConfigFile": false,
+  "tailwindCSS.validate": true
+} 
