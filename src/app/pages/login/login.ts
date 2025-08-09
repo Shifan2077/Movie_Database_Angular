@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { environment } from 'D:/moviesdb/Movies_Angular/movie-database/src/environment/environment';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
