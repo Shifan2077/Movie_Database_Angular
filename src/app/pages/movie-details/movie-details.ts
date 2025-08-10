@@ -36,15 +36,31 @@ export class MovieDetailsComponent implements OnInit {
       });
   }
 
-  fetchWatchLinks(id: string) {
+  fetchWatchLinks(tmdbId: string) {
+    // Step 1: Search by TMDB movie ID
     this.http
       .get<any>(
-        `https://api.watchmode.com/v1/title/tmdb-${id}/sources/?apiKey=${environment.watchmodeApiKey}`
+        `https://api.watchmode.com/v1/search/?apiKey=${environment.watchmodeApiKey}&search_field=tmdb_movie_id&search_value=${tmdbId}`
       )
-      .subscribe((res) => {
-        this.watchLinks = res;
+      .subscribe((searchRes) => {
+        if (searchRes.title_results && searchRes.title_results.length > 0) {
+          const watchmodeId = searchRes.title_results[0].id;
+  
+          // Step 2: Get streaming sources for that Watchmode ID
+          this.http
+            .get<any>(
+              `https://api.watchmode.com/v1/title/${watchmodeId}/sources/?apiKey=${environment.watchmodeApiKey}&regions=IN`
+            )
+            .subscribe((sourcesRes) => {
+              this.watchLinks = sourcesRes;
+            });
+        } else {
+          console.warn('No Watchmode title found for TMDB ID:', tmdbId);
+        }
       });
   }
+  
+  
 
   getPosterUrl(path: string) {
     return `https://image.tmdb.org/t/p/w500${path}`;
