@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { createClient } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { environment } from 'src/environments/environment';
-
+import { SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
   standalone: true,
@@ -16,23 +14,34 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginComponent implements OnInit {
   posters: string[] = [];
-  email: string = '';
-  password: string = '';
+
+  // Login fields
+  email = '';
+  password = '';
+
+  // Signup fields
+  signupName = '';
+  signupEmail = '';
+  signupPassword = '';
+
   loading = false;
-  errorMessage: string = '';
+  errorMessage = '';
+  successMessage = '';
 
   isFlipped = false;
-
 
   apiKey = 'cf718a3e3e187f475aa3f100b8c305cd';
   baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 
-  supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private supabaseService: SupabaseService
+  ) {}
 
   ngOnInit(): void {
-    this.http.get(`https://api.themoviedb.org/3/trending/movie/week?api_key=${this.apiKey}`)
+    this.http
+      .get(`https://api.themoviedb.org/3/trending/movie/week?api_key=${this.apiKey}`)
       .subscribe((data: any) => {
         this.posters = data.results.map((movie: any) =>
           this.baseImageUrl + movie.poster_path
@@ -40,25 +49,59 @@ export class LoginComponent implements OnInit {
       });
   }
 
+  // LOGIN
   async loginUser() {
     this.loading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
-    const { data, error } = await this.supabase.auth.signInWithPassword({
-      email: this.email,
-      password: this.password,
-    });
+    const { data, error } = await this.supabaseService.login(this.email, this.password);
 
     this.loading = false;
 
     if (error) {
       this.errorMessage = error.message;
     } else {
-      this.router.navigate(['/details']); // or wherever you want to go
+      this.router.navigate(['']);
+    }
+  }
+
+  // SIGNUP
+  async signupUser() {
+    if (!this.signupEmail || !this.signupPassword) {
+      this.errorMessage = 'Email and password are required.';
+      return;
+    }
+
+    if (this.signupPassword.length < 6) {
+      this.errorMessage = 'Password must be at least 6 characters.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const { data, error } = await this.supabaseService.signup(
+      this.signupEmail,
+      this.signupPassword
+    );
+
+    this.loading = false;
+
+    if (error) {
+      this.errorMessage = error.message;
+    } else {
+      this.successMessage = 'Signup successful! Check your email for confirmation.';
+      this.isFlipped = false;
     }
   }
 
   goToSignup() {
-    this.router.navigate(['/signup']);
+    this.isFlipped = true;
+  }
+
+  goToLogin() {
+    this.isFlipped = false;
   }
 }

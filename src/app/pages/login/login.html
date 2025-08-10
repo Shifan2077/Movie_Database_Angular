@@ -6,65 +6,128 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="relative min-h-screen bg-black overflow-hidden">
-        <!-- Movie Background -->
-        <div class="absolute inset-0 -z-10 grid grid-cols-4 md:grid-cols-6 gap-6 rotate-12 scale-125 opacity-30 pointer-events-none">
-          <img *ngFor="let poster of posters; let i = index"
-               [src]="poster"
-               class="w-32 h-48 object-cover rounded-lg shadow-lg animate-fadeIn"
-               [ngStyle]="{ 'animation-delay': (i * 150) + 'ms' }" />
-        </div>
-      
-        <!-- Flip Card Container -->
-        <div class="relative z-10 flex items-center justify-center min-h-screen w-full px-4">
-  <div class="flip-card w-full max-w-md">
-            <div class="flip-card-inner" [class.flipped]="isFlipped">
-              
-              <!-- Front: Login -->
-              <div class="flip-card-front bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-xl">
-                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back to CineVault</h2>
-                <form (ngSubmit)="loginUser()">
-                  <input [(ngModel)]="email" name="email" type="email" placeholder="Email"
-                         class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
-                  <input [(ngModel)]="password" name="password" type="password" placeholder="Password"
-                         class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
-                  <button type="submit" [disabled]="loading"
-                          class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2 rounded-lg font-semibold transition-shadow shadow-md hover:shadow-lg">
-                    {{ loading ? 'Logging In...' : 'Log In' }}
-                  </button>
-                  <p class="text-red-600 text-sm mt-3" *ngIf="errorMessage">{{ errorMessage }}</p>
-                </form>
-                <p class="mt-4 text-center text-sm text-gray-700">
-                  Don't have an account?
-                  <button type="button" (click)="isFlipped = true" class="text-red-600 font-semibold hover:underline">Sign up</button>
-                </p>
+  <div class="relative min-h-screen bg-black overflow-hidden">
+
+    <!-- Background animation wrapper -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+  
+      <!-- Diagonal Strip 1 -->
+      <div
+        class="absolute inset-0 -translate-x-32 -translate-y-32 rotate-135 flex gap-8 animate-diagonal scale-125 md:scale-150">
+        <ng-container *ngFor="let strip of [0,1,2]">
+          <div class="flex flex-col gap-8">
+            <ng-container *ngFor="let poster of posters.slice(strip * 7, (strip + 1) * 7)">
+              <div
+                class="h-100 w-60 overflow-hidden rounded-lg opacity-50 hover:opacity-40 hover:scale-105 transition-all duration-300 flex items-center justify-center bg-black">
+                <img
+                  [src]="poster"
+                  class="h-60 w-60 object-contain -rotate-90"
+                  alt="poster" />
               </div>
-      
-              <!-- Back: Signup -->
-              <div class="flip-card-back bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-xl">
-                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Join CineVault</h2>
-                <form>
-                  <input type="text" placeholder="Name"
-                         class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
-                  <input type="email" placeholder="Email"
-                         class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
-                  <input type="password" placeholder="Password"
-                         class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
-                  <button type="submit"
-                          class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2 rounded-lg font-semibold transition-shadow shadow-md hover:shadow-lg">
-                    Sign Up
-                  </button>
-                </form>
-                <p class="mt-4 text-center text-sm text-gray-700">
-                  Already have an account?
-                  <button type="button" (click)="isFlipped = false" class="text-red-600 font-semibold hover:underline">Log in</button>
-                </p>
-              </div>
-      
-            </div>
+            </ng-container>
           </div>
+        </ng-container>
+      </div>
+  
+      <!-- Diagonal Strip 2 -->
+      <div
+        class="absolute inset-0 translate-x-32 translate-y-32 -rotate-45 flex gap-4 animate-diagonal-alt scale-125 md:scale-150">
+        <ng-container *ngFor="let strip of [0,1,2]">
+          <div class="flex flex-col gap-4">
+            <ng-container *ngFor="let poster of posters.slice(strip * 7, (strip + 1) * 7).reverse()">
+              <div
+                class="h-100 w-60 overflow-hidden rounded-lg opacity-50 hover:opacity-40 hover:scale-105 transition-all duration-300 flex items-center justify-center bg-white">
+                <img
+                  [src]="poster"
+                  class="h-60 w-60 object-contain rotate-90"
+                  alt="poster" />
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+  
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black/60 z-10"></div>
+    </div>
+  
+    <!-- Flip Card Container -->
+    <div class="absolute inset-0 z-20 flex items-center justify-center px-4 translate-y-[-15%]">
+      <!-- Your flip card markup here -->
+      <div class="flip-card w-full max-w-md">
+        <div class="flip-card-inner" [class.flipped]="isFlipped">
+          
+          <!-- Front: Login -->
+          <div class="flip-card-front bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-xl">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back to CineVault</h2>
+            <form (ngSubmit)="loginUser()">
+              <input [(ngModel)]="email" name="email" type="email" placeholder="Email"
+                     class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
+              <input [(ngModel)]="password" name="password" type="password" placeholder="Password"
+                     class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow" required />
+              <button type="submit" [disabled]="loading"
+                      class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2 rounded-lg font-semibold transition-shadow shadow-md hover:shadow-lg">
+                {{ loading ? 'Logging In...' : 'Log In' }}
+              </button>
+              <p class="text-red-600 text-sm mt-3" *ngIf="errorMessage">{{ errorMessage }}</p>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-700">
+              Don't have an account?
+              <button type="button" (click)="isFlipped = true" class="text-red-600 font-semibold hover:underline">Sign up</button>
+            </p>
+          </div>
+  
+          <!-- Back: Signup -->
+          <div class="flip-card-back bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-xl">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Join CineVault</h2>
+            <form (ngSubmit)="signupUser()">
+              <input
+                type="text"
+                placeholder="Name"
+                [(ngModel)]="signupName"
+                name="signupName"
+                class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow"
+                required
+              />
+            
+              <input
+                type="email"
+                placeholder="Email"
+                [(ngModel)]="signupEmail"
+                name="signupEmail"
+                class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow"
+                required
+              />
+            
+              <input
+                type="password"
+                placeholder="Password"
+                [(ngModel)]="signupPassword"
+                name="signupPassword"
+                class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow"
+                required
+              />
+            
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2 rounded-lg font-semibold transition-shadow shadow-md hover:shadow-lg"
+              >
+                Sign Up
+              </button>
+            </form>
+            
+            <p class="mt-4 text-center text-sm text-gray-700">
+              Already have an account?
+              <button type="button" (click)="isFlipped = false" class="text-red-600 font-semibold hover:underline">Log in</button>
+            </p>
+          </div>
+  
         </div>
       </div>
+    
+    </div>
+  </div>
+  
       
       
 </body>
