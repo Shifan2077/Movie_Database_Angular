@@ -9,7 +9,7 @@ export class SupabaseService {
   private supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
   // Expose the raw client if needed
