@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="min-h-screen bg-gray-900 text-white p-6">
+
+        <!-- Top bar -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="text-2xl font-bold cursor-pointer" routerLink="/home">
+            Cine<span class="text-red-500">Vault</span>
+          </div>
+          <button
+            (click)="logout()"
+            class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg"
+          >
+            Logout
+          </button>
+        </div>
+      
+        <!-- Profile Info -->
+  <div class="mb-8 flex items-center gap-6">
+    <div>
+      <img
+        *ngIf="avatarUrl; else initialsAvatar"
+        [src]="avatarUrl"
+        alt="Avatar"
+        class="w-20 h-20 rounded-full object-cover border-2 border-gray-600"
+      />
+      <ng-template #initialsAvatar>
+        <div
+          class="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center text-white font-bold border-2 border-gray-600 text-xl"
+        >
+          {{ user?.email?.charAt(0) | uppercase }}
+        </div>
+      </ng-template>
+    </div>
+    <div>
+      <p class="text-lg font-semibold">{{ user?.email }}</p>
+      <label
+        class="block mt-2 cursor-pointer bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg text-sm"
+      >
+        <input
+          type="file"
+          accept="image/*"
+          class="hidden"
+          (change)="onAvatarChange($event)"
+        />
+        {{ uploading ? 'Uploading...' : 'Change Avatar' }}
+      </label>
+    </div>
+  </div>
+      
+        <!-- Wishlist -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4">My Wishlist</h2>
+          <div *ngIf="wishlist.length === 0" class="text-gray-400">
+            Your wishlist is empty.
+          </div>
+      
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <div
+              *ngFor="let movie of wishlist; let i = index"
+              class="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg animate-fade-in-up"
+              [style.animationDelay]="(i * 0.1) + 's'"
+            >
+              <img
+                [src]="getPosterUrl(movie.poster_path)"
+                alt="Movie Poster"
+                class="w-full h-72 object-cover"
+              />
+              <div class="p-2">
+                <h3 class="text-sm font-semibold truncate">{{ movie.movie_title }}</h3>
+                <p class="text-xs text-gray-400">⭐ {{ movie.rating }}</p>
+              </div>
+              <button
+                (click)="removeFromWishlist(movie.movie_id)"
+                class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+</body>
+</html>

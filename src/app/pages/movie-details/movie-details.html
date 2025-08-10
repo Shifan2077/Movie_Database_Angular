@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-gray-900 text-white p-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Left side -->
+      <div>
+        <img
+          *ngIf="movie?.poster_path"
+          [src]="getPosterUrl(movie.poster_path)"
+          alt="Movie Poster"
+          class="rounded-lg shadow-lg mb-4"
+        />
+        <div *ngIf="movie" class="bg-gray-800 p-3 rounded-lg text-center">
+          <p class="text-lg font-semibold">⭐ {{ movie.vote_average }}</p>
+        </div>
+      </div>
+  
+      <!-- Right side -->
+      <div class="md:col-span-2">
+        <h1 class="text-3xl font-bold mb-4">{{ movie?.title }}</h1>
+        <p class="text-gray-300 mb-6">{{ movie?.overview }}</p>
+  
+        <!-- Cast -->
+        <h2 class="text-xl font-semibold mb-3">Cast</h2>
+        <div class="flex flex-wrap gap-4 mb-6">
+          <div *ngFor="let member of cast" class="text-center w-24">
+            <img
+              *ngIf="member.profile_path"
+              [src]="getPosterUrl(member.profile_path)"
+              alt="{{ member.name }}"
+              class="rounded-lg mb-2"
+            />
+            <p class="text-sm font-medium">{{ member.name }}</p>
+          </div>
+        </div>
+  
+        <!-- Watch Links -->
+        <h2 class="text-xl font-semibold mb-3">Where to Watch</h2>
+        <div *ngIf="watchLinks.length > 0; else noLinks">
+          <ul class="space-y-2">
+            <li *ngFor="let link of watchLinks">
+              <a
+                [href]="link.web_url"
+                target="_blank"
+                class="text-red-400 hover:underline"
+              >
+                {{ link.name }} ({{ link.type }})
+              </a>
+            </li>
+          </ul>
+        </div>
+        <ng-template #noLinks>
+          <p class="text-gray-400">No streaming links available.</p>
+        </ng-template>
+      </div>
+  
+    </div>
+  </div>
+  

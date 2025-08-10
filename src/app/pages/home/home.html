@@ -1,0 +1,100 @@
+<div class="min-h-screen flex flex-col bg-gray-900 text-white">
+
+  <!-- Top bar -->
+  <div class="flex items-center justify-between px-6 py-4 bg-gray-800 flex-shrink-0">
+    <!-- Logo -->
+    <div class="text-2xl font-bold cursor-pointer" routerLink="/home">
+      Cine<span class="text-red-500">Vault</span>
+    </div>
+
+    <!-- Search bar -->
+    <div class="flex items-center">
+      <input
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="fetchMovies()"
+        placeholder="Search movies..."
+        class="px-4 py-2 rounded-l-lg bg-gray-700 text-white focus:outline-none w-64"
+      />
+      <button
+        (click)="fetchMovies()"
+        class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-r-lg"
+      >
+        Search
+      </button>
+    </div>
+
+    <!-- Profile -->
+    <div routerLink="/profile" class="cursor-pointer">
+      <ng-container *ngIf="userAvatar; else initialsAvatar">
+        <img
+          [src]="userAvatar"
+          alt="Profile"
+          class="w-10 h-10 rounded-full object-cover border-2 border-gray-600"
+        />
+      </ng-container>
+      <ng-template #initialsAvatar>
+        <div
+          class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold border-2 border-gray-600"
+        >
+          {{ userInitials }}
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Movie grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 p-6 flex-grow">
+  <div
+    *ngFor="let movie of movies; let i = index"
+    class="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg animate-slide-in-diagonal cursor-pointer"
+    [style.animationDelay]="(i * 0.05) + 's'"
+    (click)="goToDetails(movie.id)"
+  >
+    <img
+      [src]="getPosterUrl(movie.poster_path)"
+      alt="Movie Poster"
+      class="w-full h-72 object-cover"
+    />
+    <div class="p-2">
+      <h3 class="text-sm font-semibold truncate">{{ movie.title || movie.name }}</h3>
+      <p class="text-xs text-gray-400">⭐ {{ movie.vote_average }}</p>
+    </div>
+
+    <!-- Wishlist Button -->
+    <button
+      (click)="toggleWishlist(movie); $event.stopPropagation()"
+      class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center"
+    >
+      {{ wishlist.has(movie.id.toString()) ? '✓' : '+' }}
+    </button>
+  </div>
+</div>
+
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center gap-2 p-4 bg-gray-800 flex-shrink-0">
+    <button
+      (click)="goToPage(currentPage - 1)"
+      class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded"
+    >
+      Prev
+    </button>
+
+    <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+      <button
+        (click)="goToPage(i + 1)"
+        [class.bg-red-500]="currentPage === i + 1"
+        class="px-3 py-1 rounded hover:bg-gray-600"
+      >
+        {{ i + 1 }}
+      </button>
+    </ng-container>
+
+    <button
+      (click)="goToPage(currentPage + 1)"
+      class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded"
+    >
+      Next
+    </button>
+  </div>
+</div>

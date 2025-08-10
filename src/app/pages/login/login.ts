@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
     if (error) {
       this.errorMessage = error.message;
     } else {
-      this.router.navigate(['']);
+      this.router.navigate(['/home']);
     }
   }
 
