@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-movie-details',
@@ -14,7 +15,7 @@ export class MovieDetailsComponent implements OnInit {
   cast: any[] = [];
   watchLinks: any[] = [];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private location: Location) {}
 
   ngOnInit() {
     const movieId = this.route.snapshot.paramMap.get('id');
@@ -48,4 +49,9 @@ export class MovieDetailsComponent implements OnInit {
   getPosterUrl(path: string) {
     return `https://image.tmdb.org/t/p/w500${path}`;
   }
+
+  goBack() {
+    this.location.back(); // Goes to the previous route
+  }
+  
 }
