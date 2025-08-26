@@ -1,0 +1,14 @@
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/tmdb"
+  to = "/.netlify/functions/tmdb"
+  status = 200
+
+[[redirects]]
+  from = "/api/watchmode"
+  to = "/.netlify/functions/watchmode"
+  status = 200
+
+
