@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
 
   isFlipped = false;
 
-  apiKey = 'cf718a3e3e187f475aa3f100b8c305cd';
+  // Removed API key; using Netlify proxy instead
   baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 
   constructor(
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.http
-      .get(`https://api.themoviedb.org/3/trending/movie/week?api_key=${this.apiKey}`)
+      .get(`/api/tmdb`, { params: { path: 'trending/movie/week' } })
       .subscribe((data: any) => {
         this.posters = data.results.map((movie: any) =>
           this.baseImageUrl + movie.poster_path

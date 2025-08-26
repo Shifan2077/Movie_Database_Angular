@@ -54,11 +54,11 @@ userInitials: string = '';
   }
 
   fetchMovies() {
-    const endpoint = this.searchQuery
-      ? `https://api.themoviedb.org/3/search/movie?api_key=${environment.tmdbApiKey}&query=${this.searchQuery}&page=${this.currentPage}`
-      : `https://api.themoviedb.org/3/movie/popular?api_key=${environment.tmdbApiKey}&page=${this.currentPage}`;
+    const path = this.searchQuery
+      ? `search/movie?query=${this.searchQuery}&page=${this.currentPage}`
+      : `movie/popular?page=${this.currentPage}`;
 
-    this.http.get<any>(endpoint).subscribe(res => {
+    this.http.get<any>(`/api/tmdb`, { params: { path } }).subscribe(res => {
       this.movies = res.results;
       this.totalPages = res.total_pages > 10 ? 10 : res.total_pages; // cap pages to 10 for UI
     });

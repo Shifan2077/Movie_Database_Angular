@@ -16,7 +16,7 @@ export class LandingComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.http.get<any>('https://api.themoviedb.org/3/trending/movie/day?api_key=9975187a3fab275529f9b6654a210084')
+    this.http.get<any>('/api/tmdb', { params: { path: 'trending/movie/day' } })
       .subscribe((res) => {
         this.trendingMovies = res.results; // ✅ Store full movie objects
       });
